@@ -98,9 +98,13 @@ TEE_Result crypto_acipher_ed25519_sign(struct ed25519_keypair *key,
 
 	memzero_explicit(&private_key, sizeof(private_key));
 
-	if (err != CRYPT_OK)
+	if (err != CRYPT_OK && err != CRYPT_BUFFER_OVERFLOW)
 		return TEE_ERROR_BAD_PARAMETERS;
+
 	*sig_len = siglen;
+	if (err == CRYPT_BUFFER_OVERFLOW)
+		return TEE_ERROR_SHORT_BUFFER;
+
 	return TEE_SUCCESS;
 }
 
@@ -135,9 +139,13 @@ TEE_Result crypto_acipher_ed25519ctx_sign(struct ed25519_keypair *key,
 
 	memzero_explicit(&private_key, sizeof(private_key));
 
-	if (err != CRYPT_OK)
+	if (err != CRYPT_OK && err != CRYPT_BUFFER_OVERFLOW)
 		return TEE_ERROR_BAD_PARAMETERS;
+
 	*sig_len = siglen;
+	if (err == CRYPT_BUFFER_OVERFLOW)
+		return TEE_ERROR_SHORT_BUFFER;
+
 	return TEE_SUCCESS;
 }
 
